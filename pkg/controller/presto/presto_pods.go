@@ -242,16 +242,19 @@ func createPrestoPodSpec(r *ReconcilePresto, presto *prestodbv1alpha1.Presto,
 	if len(imageName) == 0 {
 		imageName = "prestosql/presto:333"
 	}
-
+	
 	var containerPrefix string
 	var lifecycle *corev1.Lifecycle
+	var tolerations []corev1.Toleration
 	var terminationGraceSeconds *int64 = nil
 
 	if isCoordinator {
 		lifecycle = nil
 		containerPrefix = getCoordinatorContainerName(presto.Status.Uuid)
+		tolerations = presto.Spec.Coordinator.Tolerations
 	} else {
 		containerPrefix = getWorkerContainerPrefix(presto.Status.Uuid)
+		tolerations = presto.Spec.Worker.Tolerations
 		if presto.Spec.Worker.TerminationGracePeriodSeconds == nil {
 			defaultGraceSeconds := int64(DefaultTerminationGracePeriodSeconds)
 			terminationGraceSeconds = &defaultGraceSeconds
@@ -282,6 +285,7 @@ func createPrestoPodSpec(r *ReconcilePresto, presto *prestodbv1alpha1.Presto,
 				Lifecycle: lifecycle,
 			},
 		},
+		Tolerations: tolerations,
 	}
 
 	if isCoordinator {
