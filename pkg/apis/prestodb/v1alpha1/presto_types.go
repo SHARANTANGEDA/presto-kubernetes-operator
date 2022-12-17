@@ -28,6 +28,8 @@ type CoordinatorSpec struct {
 	HttpsKeyPairSecretKey string `json:"httpsKeyPairSecretKey,omitempty"`
 	// +kubebuilder:validation:Optional
 	HttpsKeyPairPassword string `json:"httpsKeyPairPassword,omitempty"`
+	// +kubebuilder:validation:Optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
 }
 
 // +k8s:openapi-gen=true
@@ -60,6 +62,8 @@ type WorkerSpec struct {
 
 	// +kubebuilder:validation:Optional
 	Autoscaling AutoscalingSpec `json:"autoscaling,omitempty"`
+	// +kubebuilder:validation:Optional
+	Tolerations []v1.Toleration `json:"tolerations,omitempty" protobuf:"bytes,22,opt,name=tolerations"`
 }
 
 // +k8s:openapi-gen=true
